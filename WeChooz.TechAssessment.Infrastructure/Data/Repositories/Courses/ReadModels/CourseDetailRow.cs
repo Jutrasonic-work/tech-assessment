@@ -1,10 +1,8 @@
 using WeChooz.TechAssessment.Domain.Courses;
 
-namespace WeChooz.TechAssessment.Domain.ReadModels;
+namespace WeChooz.TechAssessment.Infrastructure.Data.Repositories.Courses.ReadModels;
 
-public sealed record CourseListItemResult(int CourseId, string Name, CseAudience CseAudience, int DurationDays, int MaxCapacity);
-
-public sealed record CourseDetailResult(
+internal sealed record CourseDetailRow(
     int CourseId,
     string Name,
     string ShortDescription,

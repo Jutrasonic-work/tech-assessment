@@ -1,10 +1,10 @@
-using WeChooz.TechAssessment.Domain.ReadModels;
+using WeChooz.TechAssessment.Domain.Participants;
 
-namespace WeChooz.TechAssessment.Domain.Repositories;
+namespace WeChooz.TechAssessment.Application.Persistence.Participants;
 
 public interface IParticipantRepository
 {
-    Task<IReadOnlyList<ParticipantResult>> ListBySessionAsync(int sessionId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Participant>> ListBySessionAsync(int sessionId, CancellationToken cancellationToken = default);
 
     Task<int> InsertAsync(
         int sessionId,

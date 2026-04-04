@@ -1,13 +1,12 @@
 using WeChooz.TechAssessment.Domain.Courses;
-using WeChooz.TechAssessment.Domain.ReadModels;
 
-namespace WeChooz.TechAssessment.Domain.Repositories;
+namespace WeChooz.TechAssessment.Application.Persistence.Courses;
 
 public interface ICourseRepository
 {
-    Task<IReadOnlyList<CourseListItemResult>> ListAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<CourseSummary>> ListAsync(CancellationToken cancellationToken = default);
 
-    Task<CourseDetailResult?> GetByIdAsync(int courseId, CancellationToken cancellationToken = default);
+    Task<Course?> GetByIdAsync(int courseId, CancellationToken cancellationToken = default);
 
     Task<int> InsertAsync(
         string name,

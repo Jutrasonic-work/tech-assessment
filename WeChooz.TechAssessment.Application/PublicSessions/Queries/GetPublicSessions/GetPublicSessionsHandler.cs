@@ -1,6 +1,6 @@
 using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Domain.ReadModels;
-using WeChooz.TechAssessment.Domain.Repositories;
+using WeChooz.TechAssessment.Application.Persistence.Sessions;
+using WeChooz.TechAssessment.Domain.Sessions;
 
 namespace WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessions;
 
@@ -8,7 +8,7 @@ public sealed class GetPublicSessionsHandler(ISessionRepository sessions) : IReq
 {
     public async Task<GetPublicSessionsResponse> HandleAsync(GetPublicSessionsQuery request, CancellationToken cancellationToken = default)
     {
-        var filter = new ListPublicSessionsFilter(
+        var filter = new PublicSessionListCriteria(
             request.Audience,
             request.DeliveryMode,
             request.StartAfter,

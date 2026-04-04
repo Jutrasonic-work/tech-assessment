@@ -1,19 +1,19 @@
-using WeChooz.TechAssessment.Domain.ReadModels;
+using WeChooz.TechAssessment.Domain.Sessions;
 
 namespace WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessions;
 
 internal static class GetPublicSessionsMapper
 {
-    public static GetPublicSessionsItem ToItem(this PublicSessionListItemResult r) =>
+    public static GetPublicSessionsItem ToItem(this PublicSessionListing s) =>
         new(
-            r.SessionId,
-            r.CourseName,
-            r.ShortDescription,
-            r.CseAudience,
-            r.StartDate,
-            r.DurationDays,
-            r.DeliveryMode,
-            r.RemainingSeats,
-            r.TrainerFirstName,
-            r.TrainerLastName);
+            s.SessionId,
+            s.CourseName,
+            s.ShortDescription,
+            s.CseAudience,
+            s.StartDate,
+            s.DurationDays,
+            s.DeliveryMode,
+            s.RemainingSeats,
+            s.TrainerFirstName,
+            s.TrainerLastName);
 }

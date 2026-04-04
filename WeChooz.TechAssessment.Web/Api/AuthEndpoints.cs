@@ -27,6 +27,9 @@ internal static class AuthEndpoints
             }
 
             return TypedResults.Ok(result.Response!);
-        });
+        })
+        .WithTags("Authentification")
+        .WithSummary("Connexion (cookie)")
+        .WithDescription("Valeurs de test : formation ou sales. Pose un cookie d'authentification.");
     }
 }

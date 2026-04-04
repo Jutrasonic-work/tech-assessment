@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Scalar.AspNetCore;
 using Shared.Mediator.Application;
 using Vite.AspNetCore;
 using WeChooz.TechAssessment.Application;
@@ -54,6 +55,8 @@ builder.Services.AddViteServices(options =>
     options.Manifest = "vite.manifest.json";
 });
 
+builder.Services.AddOpenApi();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -77,6 +80,17 @@ app.MapDefaultEndpoints();
 app.MapApi();
 app.MapControllers();
 
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.RestSharp);
+        options.WithTitle("WeChooz — API formations");
+        options.WithTheme(ScalarTheme.Solarized);
+    });
+}
+
 app.MapControllerRoute(
         name: "fallback_admin",
         pattern: "admin/{*subpath}",
@@ -91,7 +105,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
         name: "fallback_home",
         pattern: "{*subpath}",
-        constraints: new { subpath = @"^(?!swagger)(?!api).*$" },
+        constraints: new { subpath = @"^(?!swagger)(?!api)(?!scalar)(?!openapi).*$" },
         defaults: new { controller = "Home", action = "Handle" }
 );
 app.MapControllerRoute(

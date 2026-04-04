@@ -1,8 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using WeChooz.TechAssessment.Application.Abstractions.Data;
-using WeChooz.TechAssessment.Domain.Repositories;
+using WeChooz.TechAssessment.Application.Persistence.Courses;
+using WeChooz.TechAssessment.Application.Persistence.Participants;
+using WeChooz.TechAssessment.Application.Persistence.Sessions;
 using WeChooz.TechAssessment.Infrastructure.Data;
-using WeChooz.TechAssessment.Infrastructure.Data.Repositories;
+using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Courses;
+using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Participants;
+using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Sessions;
 
 namespace WeChooz.TechAssessment.Infrastructure;
 
@@ -10,6 +13,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string formationConnectionString)
     {
+        DapperTypeHandlers.Register();
+
         services.AddSingleton<IDbConnectionFactory>(_ => new SqlConnectionFactory(formationConnectionString));
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();

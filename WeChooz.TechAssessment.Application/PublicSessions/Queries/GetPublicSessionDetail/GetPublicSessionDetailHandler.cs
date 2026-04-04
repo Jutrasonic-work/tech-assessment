@@ -1,6 +1,6 @@
 using Markdig;
 using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Domain.Repositories;
+using WeChooz.TechAssessment.Application.Persistence.Sessions;
 
 namespace WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessionDetail;
 
@@ -10,27 +10,27 @@ public sealed class GetPublicSessionDetailHandler(ISessionRepository sessions) :
 
     public async Task<GetPublicSessionDetailResponse?> HandleAsync(GetPublicSessionDetailQuery request, CancellationToken cancellationToken = default)
     {
-        var row = await sessions.GetPublicDetailAsync(request.SessionId, cancellationToken);
-        if (row is null)
+        var detail = await sessions.GetPublicDetailAsync(request.SessionId, cancellationToken);
+        if (detail is null)
         {
             return null;
         }
 
-        var html = string.IsNullOrWhiteSpace(row.LongDescriptionMarkdown)
+        var html = string.IsNullOrWhiteSpace(detail.LongDescriptionMarkdown)
             ? string.Empty
-            : Markdown.ToHtml(row.LongDescriptionMarkdown, MarkdownPipeline);
+            : Markdown.ToHtml(detail.LongDescriptionMarkdown, MarkdownPipeline);
 
         return new GetPublicSessionDetailResponse(
-            row.SessionId,
-            row.CourseName,
-            row.ShortDescription,
+            detail.SessionId,
+            detail.CourseName,
+            detail.ShortDescription,
             html,
-            row.CseAudience,
-            row.StartDate,
-            row.DurationDays,
-            row.DeliveryMode,
-            row.RemainingSeats,
-            row.TrainerFirstName,
-            row.TrainerLastName);
+            detail.CseAudience,
+            detail.StartDate,
+            detail.DurationDays,
+            detail.DeliveryMode,
+            detail.RemainingSeats,
+            detail.TrainerFirstName,
+            detail.TrainerLastName);
     }
 }

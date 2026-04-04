@@ -1,18 +1,18 @@
-using WeChooz.TechAssessment.Domain.ReadModels;
+using WeChooz.TechAssessment.Domain.Courses;
 
 namespace WeChooz.TechAssessment.Application.Courses.Queries.GetCourseById;
 
 internal static class GetCourseByIdMapper
 {
-    public static GetCourseByIdResponse ToResponse(this CourseDetailResult r) =>
+    public static GetCourseByIdResponse ToResponse(this Course c) =>
         new(
-            r.CourseId,
-            r.Name,
-            r.ShortDescription,
-            r.LongDescriptionMarkdown,
-            r.DurationDays,
-            r.CseAudience,
-            r.MaxCapacity,
-            r.TrainerFirstName,
-            r.TrainerLastName);
+            c.CourseId,
+            c.Name,
+            c.ShortDescription,
+            c.LongDescription,
+            c.DurationDays,
+            c.CseAudience,
+            c.MaxCapacity,
+            c.Trainer.FirstName,
+            c.Trainer.LastName);
 }

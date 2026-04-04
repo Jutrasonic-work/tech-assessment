@@ -1,5 +1,5 @@
 using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Domain.Repositories;
+using WeChooz.TechAssessment.Application.Persistence.Participants;
 
 namespace WeChooz.TechAssessment.Application.Participants.Commands.AddParticipant;
 
