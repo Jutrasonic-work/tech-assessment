@@ -1,4 +1,9 @@
-﻿import ReactDOM, { Container } from "react-dom/client";
+﻿import { createRoot } from "react-dom/client";
 
-const root = ReactDOM.createRoot(document.getElementById("react-app") as Container);
+const container = document.getElementById("react-app");
+if (!container) {
+    throw new Error("Root element #react-app not found");
+}
+
+const root = createRoot(container);
 root.render(<h1>Hello public page</h1>);
