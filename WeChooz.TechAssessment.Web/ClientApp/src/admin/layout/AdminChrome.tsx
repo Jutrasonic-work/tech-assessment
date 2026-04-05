@@ -1,6 +1,6 @@
 import { AppShell, Burger, Button, Group, NavLink as MantineNavLink, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { ThemeToggle } from "@/shared/components/ThemeToggle";
 import { clearStoredRole, getStoredRole, type AdminRole } from "@/admin/auth/adminSession";
 
@@ -21,12 +21,11 @@ function NavSection({ role }: { role: AdminRole }) {
 
 export function AdminChrome() {
     const [opened, { toggle }] = useDisclosure();
-    const navigate = useNavigate();
     const role = getStoredRole();
 
     const handleLeave = () => {
         clearStoredRole();
-        navigate("/login", { replace: true });
+        window.location.assign("/");
     };
 
     return (

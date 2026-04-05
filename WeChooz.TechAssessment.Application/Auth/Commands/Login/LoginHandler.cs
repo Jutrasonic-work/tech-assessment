@@ -6,6 +6,7 @@ namespace WeChooz.TechAssessment.Application.Auth.Commands.Login;
 
 public sealed class LoginHandler(IAuthenticationSignIn signIn) : IRequestHandler<LoginCommand, LoginResult>
 {
+    private const string CookieAuthenticationScheme = "Cookies";
     public async Task<LoginResult> HandleAsync(LoginCommand request, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(request.Login))
@@ -23,7 +24,8 @@ public sealed class LoginHandler(IAuthenticationSignIn signIn) : IRequestHandler
                 [
                     new Claim(ClaimTypes.Role, request.Login),
                     new Claim(ClaimTypes.Name, request.Login),
-                ]),
+                ],
+                authenticationType: CookieAuthenticationScheme),
         ]);
 
         await signIn.SignInAsync(principal, cancellationToken);
