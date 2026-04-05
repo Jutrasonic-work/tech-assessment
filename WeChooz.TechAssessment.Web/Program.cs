@@ -6,6 +6,7 @@ using Vite.AspNetCore;
 using WeChooz.TechAssessment.Application;
 using WeChooz.TechAssessment.Application.Abstractions.Authentication;
 using WeChooz.TechAssessment.Infrastructure;
+using Shared.Validation.Api;
 using WeChooz.TechAssessment.Web.Api;
 using WeChooz.TechAssessment.Web.Authentication;
 
@@ -75,6 +76,7 @@ app.MapStaticAssets();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseFluentValidationExceptionHandler();
 app.MapDefaultEndpoints();
 
 app.MapApi();

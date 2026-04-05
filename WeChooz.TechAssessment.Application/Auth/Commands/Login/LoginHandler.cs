@@ -9,11 +9,6 @@ public sealed class LoginHandler(IAuthenticationSignIn signIn) : IRequestHandler
     private const string CookieAuthenticationScheme = "Cookies";
     public async Task<LoginResult> HandleAsync(LoginCommand request, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(request.Login))
-        {
-            return new LoginResult(null, LoginFailureKind.EmptyLogin);
-        }
-
         if (request.Login is not ("formation" or "sales"))
         {
             return new LoginResult(null, LoginFailureKind.InvalidCredentials);

@@ -4,7 +4,6 @@ public sealed record LoginResult(LoginResponse? Response, LoginFailureKind? Fail
 
 public enum LoginFailureKind
 {
-    EmptyLogin,
     InvalidCredentials,
 }
 

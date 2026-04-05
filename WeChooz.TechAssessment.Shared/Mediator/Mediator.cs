@@ -1,9 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Shared.Mediator.Application;
 
 public class Mediator(IServiceProvider provider) : IMediator
 {
+    private static readonly MethodInfo SendWithPipelineDefinition =
+        typeof(Mediator).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            .Single(m => m.Name == nameof(SendAsync)
+                && m.IsGenericMethodDefinition
+                && m.GetGenericArguments().Length == 2);
 
     public async Task<TResult> SendAsync<TRequest, TResult>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest<TResult>
     {
@@ -22,14 +28,10 @@ public class Mediator(IServiceProvider provider) : IMediator
     public async Task<TResult> SendAsync<TResult>(IRequest<TResult> request, CancellationToken cancellationToken = default)
     {
         var requestType = request.GetType();
-        var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, typeof(TResult));
-        var handler = provider.GetService(handlerType)
-            ?? throw new InvalidOperationException($"No handler registered for {requestType.Name}");
-        var method = handlerType.GetMethod("HandleAsync")
-            ?? throw new InvalidOperationException($"Handler for {requestType.Name} does not implement HandleAsync method");
-        var result = await (Task<TResult>)method.Invoke(handler, [request, cancellationToken])!;
-
-        return result;
+        var closed = SendWithPipelineDefinition.MakeGenericMethod(requestType, typeof(TResult));
+        var task = (Task)closed.Invoke(this, [request, cancellationToken])!;
+        await task.ConfigureAwait(false);
+        return (TResult)task.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)!.GetValue(task)!;
     }
 
     public async Task SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest

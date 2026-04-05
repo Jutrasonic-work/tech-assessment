@@ -10,17 +10,12 @@ internal static class AuthEndpoints
     {
         var auth = root.MapGroup("/auth").AllowAnonymous();
 
-        auth.MapPost("/login", async Task<Results<BadRequest<string>, Ok<LoginResponse>, UnauthorizedHttpResult>> (
+        auth.MapPost("/login", async Task<Results<Ok<LoginResponse>, UnauthorizedHttpResult>> (
             IMediator mediator,
             LoginCommand body,
             CancellationToken cancellationToken) =>
         {
             var result = await mediator.SendAsync(body, cancellationToken);
-            if (result.Failure == LoginFailureKind.EmptyLogin)
-            {
-                return TypedResults.BadRequest("Login cannot be empty.");
-            }
-
             if (result.Failure == LoginFailureKind.InvalidCredentials)
             {
                 return TypedResults.Unauthorized();

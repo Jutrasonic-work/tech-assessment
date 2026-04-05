@@ -78,7 +78,7 @@ export function SessionsListPage() {
                         <Table.Th>Début</Table.Th>
                         <Table.Th>Mode</Table.Th>
                         <Table.Th>Participants</Table.Th>
-                        <Table.Th w={260} />
+                        <Table.Th miw={420} style={{ width: "1%" }} />
                     </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -91,7 +91,7 @@ export function SessionsListPage() {
                                 {s.participantCount} / {s.maxCapacity}
                             </Table.Td>
                             <Table.Td>
-                                <Group gap="xs" justify="flex-end">
+                                <Group gap="xs" justify="flex-end" wrap="nowrap">
                                     <Button component={Link} to={`/sessions/${s.sessionId}`} size="xs" variant="light">
                                         Détail
                                     </Button>
