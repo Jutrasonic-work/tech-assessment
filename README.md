@@ -1,3 +1,56 @@
+# Réalisé par Julien Lefebvre
+
+## Architecture
+
+- Clean Architecture avec séparation claire :
+    - Domain : règles métier et entités
+    - Application : use cases (commands/queries), handlers, validation
+    - Infrastructure : accès aux données (Dapper), repositories, SQL
+    - Web : endpoints Minimal API + frontend React
+
+- CQRS :
+    - Commands pour les écritures
+    - Queries pour les lectures
+    - Handlers dédiés pour chaque opération
+
+- Couche Shared :
+    - Médiation (IMediator)
+    - Validation (FluentValidation)
+    - Utilitaires communs
+
+## API
+
+- Endpoints Minimal API organisés par domaine : Auth, Course, Session, Participant, Api.
+- Documentation interactive via **Scalar** :
+    - Scalar est une interface moderne pour visualiser et tester les endpoints (alternative à Swagger).
+    - Accessible via : `/scalar` dans le projet.
+
+## Frontend
+
+- React + TypeScript dans `Web/ClientApp`
+- Pages publiques et pages admin
+- Appels API en TypeScript
+- UI basée sur Mantine
+
+## Tests
+
+- Tests unitaires sur les handlers (logique applicative)
+- Projet de tests : `WeChooz.TechAssessment.Tests`
+- Pas de tests d'intégration ni E2E (hors périmètre du test)
+
+## Notes
+
+L'architecture, les choix techniques, la structure du code et l'ensemble de la logique applicative ont été conçus et développés par mes soins.  
+J'ai simplement utilisé ponctuellement l'IA pour accélérer certaines parties non centrales du test, notamment sur le front (React/Mantine) et pour générer quelques données de base.
+
+# Demandes du fichier system-design.md
+
+Réponse dans le fichier `system-design-response.md`
+
+==============================================================================================================
+
+
+
 # Test technique WeChooz 
 
 Bienvenue dans le projet de test technique WeChooz !
