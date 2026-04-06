@@ -11,12 +11,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WeChooz.TechAssessment.Domain\WeChooz.TechAssessment.Domain.csproj" />
+    <ProjectReference Include="..\WeChooz.TechAssessment.Application\WeChooz.TechAssessment.Application.csproj" />
+    <ProjectReference Include="..\WeChooz.TechAssessment.Infrastructure\WeChooz.TechAssessment.Infrastructure.csproj" />
     <ProjectReference Include="..\WeChooz.TechAssessment.ServiceDefaults\WeChooz.TechAssessment.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\WeChooz.TechAssessment.Shared\WeChooz.TechAssessment.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="13.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.19" />
     <PackageReference Include="Vite.AspNetCore" Version="2.4.1" />
   </ItemGroup>
 

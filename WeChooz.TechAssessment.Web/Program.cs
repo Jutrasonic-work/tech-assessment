@@ -1,6 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Scalar.AspNetCore;
+using Shared.Validation;
 using Vite.AspNetCore;
+using WeChooz.TechAssessment.Application;
+using WeChooz.TechAssessment.Application.Interfaces.Authentication;
+using WeChooz.TechAssessment.Infrastructure;
+using WeChooz.TechAssessment.Web.Api;
+using WeChooz.TechAssessment.Web.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +16,9 @@ builder.AddServiceDefaults();
 
 var sqlServerConnectionString = builder.Configuration.GetConnectionString("formation") ?? throw new InvalidOperationException("Connection string 'formation' not found.");
 var redisConnectionString = builder.Configuration.GetConnectionString("cache") ?? throw new InvalidOperationException("Connection string 'cache' not found.");
+
+builder.Services.AddApplication(redisConnectionString);
+builder.Services.AddInfrastructure(sqlServerConnectionString);
 
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<RazorViewEngineOptions>(options =>
@@ -28,8 +38,12 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("Formation", policy => policy.Combine(defaultPolicy).RequireRole("formation"));
     options.AddPolicy("Sales", policy => policy.Combine(defaultPolicy).RequireRole("sales"));
+    options.AddPolicy("Participants", policy => policy.RequireAuthenticatedUser().RequireAssertion(ctx =>
+        ctx.User.IsInRole("formation") || ctx.User.IsInRole("sales")));
 });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuthenticationSignIn, HttpContextAuthenticationSignIn>();
 
 builder.Services.AddViteServices(options =>
 {
@@ -39,6 +53,8 @@ builder.Services.AddViteServices(options =>
     options.Server.UseReactRefresh = true;
     options.Manifest = "vite.manifest.json";
 });
+
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -56,14 +72,29 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseFluentValidationExceptionHandler();
 app.MapDefaultEndpoints();
 
+app.MapApi();
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.RestSharp);
+        options.WithTitle("WeChooz — API formations");
+        options.WithTheme(ScalarTheme.Solarized);
+    });
+}
 
 app.MapControllerRoute(
         name: "fallback_admin",
         pattern: "admin/{*subpath}",
-        constraints: new { subpath = @"^(?!swagger).*$" },
+        constraints: new { subpath = @"^(?!swagger)(?!api).*$" },
         defaults: new { controller = "Admin", action = "Handle" }
 );
 app.MapControllerRoute(
@@ -74,7 +105,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
         name: "fallback_home",
         pattern: "{*subpath}",
-        constraints: new { subpath = @"^(?!swagger).*$" },
+        constraints: new { subpath = @"^(?!swagger)(?!api)(?!scalar)(?!openapi).*$" },
         defaults: new { controller = "Home", action = "Handle" }
 );
 app.MapControllerRoute(

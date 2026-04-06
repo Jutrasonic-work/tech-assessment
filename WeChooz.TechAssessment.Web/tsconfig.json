@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["ClientApp/src/*"]
+    },
     "composite": true,
     "noImplicitAny": true,
     "module": "ESNext",

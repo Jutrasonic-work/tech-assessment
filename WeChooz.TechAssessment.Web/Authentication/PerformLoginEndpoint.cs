@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -17,8 +18,12 @@ public class PerformLoginEndpoint : Ardalis.ApiEndpoints.EndpointBaseAsync.WithR
         }
         if (request.Login == "formation" || request.Login == "sales")
         {
-            var principal = new ClaimsPrincipal([new ClaimsIdentity([new Claim(ClaimTypes.Role, request.Login), new Claim(ClaimTypes.Name, request.Login)])]);
-            await HttpContext.SignInAsync(principal);
+            var principal = new ClaimsPrincipal([
+                new ClaimsIdentity(
+                    [new Claim(ClaimTypes.Role, request.Login), new Claim(ClaimTypes.Name, request.Login)],
+                    CookieAuthenticationDefaults.AuthenticationScheme),
+            ]);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             return Ok(principal.Claims);
         }
         return Unauthorized();
