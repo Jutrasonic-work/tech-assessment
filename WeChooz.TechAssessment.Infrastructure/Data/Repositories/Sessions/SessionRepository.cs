@@ -1,8 +1,6 @@
 using Dapper;
-using WeChooz.TechAssessment.Application.Persistence.Sessions;
-using WeChooz.TechAssessment.Domain.Courses;
+using WeChooz.TechAssessment.Application.Interfaces.Sessions;
 using WeChooz.TechAssessment.Domain.Sessions;
-using WeChooz.TechAssessment.Infrastructure.Data;
 using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Sessions.ReadModels;
 
 namespace WeChooz.TechAssessment.Infrastructure.Data.Repositories.Sessions;
@@ -11,7 +9,7 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
 {
     public async Task<IReadOnlyList<PublicSessionListing>> ListPublicAsync(PublicSessionListCriteria criteria, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             SELECT
                 s.SessionId,
                 c.Name AS CourseName,
@@ -40,9 +38,9 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
               AND (@StartFrom IS NULL OR s.StartDate >= @StartFrom)
               AND (@StartTo IS NULL OR s.StartDate <= @StartTo)
             ORDER BY s.StartDate;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
-        var rows = await conn.QueryAsync<PublicSessionListRow>(
+        var rows = await conn.QueryAsync<PublicSessionListRead>(
             new CommandDefinition(
                 commandText: sql,
                 parameters: new
@@ -55,12 +53,12 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
                     StartTo = criteria.StartTo,
                 },
                 cancellationToken: cancellationToken));
-        return rows.Select(ToDomain).ToList();
+        return [.. rows.Select(ToDomain)];
     }
 
     public async Task<PublicSessionCatalogDetail?> GetPublicDetailAsync(int sessionId, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             SELECT
                 s.SessionId,
                 c.Name AS CourseName,
@@ -84,16 +82,16 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
                 GROUP BY SessionId
             ) pc ON pc.SessionId = s.SessionId
             WHERE s.SessionId = @SessionId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
-        var row = await conn.QuerySingleOrDefaultAsync<PublicSessionDetailRow>(
+        var row = await conn.QuerySingleOrDefaultAsync<PublicSessionDetailRead>(
             new CommandDefinition(commandText: sql, parameters: new { SessionId = sessionId }, cancellationToken: cancellationToken));
         return row is null ? null : ToDomain(row);
     }
 
     public async Task<IReadOnlyList<AdminSessionOverview>> ListAdminAsync(CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             SELECT
                 s.SessionId,
                 s.CourseId,
@@ -110,16 +108,16 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
                 GROUP BY SessionId
             ) pc ON pc.SessionId = s.SessionId
             ORDER BY s.StartDate DESC;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
-        var rows = await conn.QueryAsync<AdminSessionRow>(
+        var rows = await conn.QueryAsync<AdminSessionRead>(
             new CommandDefinition(commandText: sql, parameters: null, cancellationToken: cancellationToken));
-        return rows.Select(ToDomain).ToList();
+        return [.. rows.Select(ToDomain)];
     }
 
     public async Task<AdminSessionOverview?> GetAdminByIdAsync(int sessionId, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             SELECT
                 s.SessionId,
                 s.CourseId,
@@ -136,20 +134,20 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
                 GROUP BY SessionId
             ) pc ON pc.SessionId = s.SessionId
             WHERE s.SessionId = @SessionId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
-        var row = await conn.QuerySingleOrDefaultAsync<AdminSessionRow>(
+        var row = await conn.QuerySingleOrDefaultAsync<AdminSessionRead>(
             new CommandDefinition(commandText: sql, parameters: new { SessionId = sessionId }, cancellationToken: cancellationToken));
         return row is null ? null : ToDomain(row);
     }
 
     public async Task<int> InsertAsync(int courseId, DateTime startDate, SessionDeliveryMode deliveryMode, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             INSERT INTO dbo.Sessions (CourseId, StartDate, DeliveryMode)
             OUTPUT INSERTED.SessionId
             VALUES (@CourseId, @StartDate, @DeliveryMode);
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
         return await conn.QuerySingleAsync<int>(
             new CommandDefinition(
@@ -160,13 +158,13 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
 
     public async Task<bool> UpdateAsync(int sessionId, int courseId, DateTime startDate, SessionDeliveryMode deliveryMode, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             UPDATE dbo.Sessions
             SET CourseId = @CourseId,
                 StartDate = @StartDate,
                 DeliveryMode = @DeliveryMode
             WHERE SessionId = @SessionId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
         var affected = await conn.ExecuteAsync(
             new CommandDefinition(
@@ -184,16 +182,16 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
 
     public async Task DeleteAsync(int sessionId, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             DELETE FROM dbo.Sessions
             WHERE SessionId = @SessionId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
         await conn.ExecuteAsync(
             new CommandDefinition(commandText: sql, parameters: new { SessionId = sessionId }, cancellationToken: cancellationToken));
     }
 
-    private static PublicSessionListing ToDomain(PublicSessionListRow r) =>
+    private static PublicSessionListing ToDomain(PublicSessionListRead r) =>
         new(
             r.SessionId,
             r.CourseName,
@@ -206,7 +204,7 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
             r.TrainerFirstName,
             r.TrainerLastName);
 
-    private static PublicSessionCatalogDetail ToDomain(PublicSessionDetailRow r) =>
+    private static PublicSessionCatalogDetail ToDomain(PublicSessionDetailRead r) =>
         new(
             r.SessionId,
             r.CourseName,
@@ -220,7 +218,7 @@ public sealed class SessionRepository(IDbConnectionFactory connectionFactory) : 
             r.TrainerFirstName,
             r.TrainerLastName);
 
-    private static AdminSessionOverview ToDomain(AdminSessionRow r) =>
+    private static AdminSessionOverview ToDomain(AdminSessionRead r) =>
         new(
             r.SessionId,
             r.CourseId,

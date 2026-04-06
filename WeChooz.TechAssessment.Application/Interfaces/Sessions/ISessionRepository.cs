@@ -1,6 +1,6 @@
 using WeChooz.TechAssessment.Domain.Sessions;
 
-namespace WeChooz.TechAssessment.Application.Persistence.Sessions;
+namespace WeChooz.TechAssessment.Application.Interfaces.Sessions;
 
 public interface ISessionRepository
 {

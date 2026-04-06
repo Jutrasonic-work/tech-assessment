@@ -1,4 +1,4 @@
-﻿namespace Shared.Mediator.Application;
+﻿namespace Shared.Mediator;
 
 /// <summary>
 /// Handles the input and output of a request, allowing for pre- and post-processing logic.

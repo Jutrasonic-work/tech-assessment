@@ -1,5 +1,5 @@
-using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Application.Persistence.Participants;
+using Shared.Mediator;
+using WeChooz.TechAssessment.Application.Interfaces.Participants;
 
 namespace WeChooz.TechAssessment.Application.Participants.Commands.UpdateParticipant;
 

@@ -1,4 +1,4 @@
-using Shared.Mediator.Application;
+using Shared.Mediator;
 
 namespace WeChooz.TechAssessment.Application.Participants.Commands.AddParticipant;
 

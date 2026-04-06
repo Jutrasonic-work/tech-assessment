@@ -1,8 +1,5 @@
 namespace WeChooz.TechAssessment.Domain.Sessions;
 
-/// <summary>
-/// Session de formation planifiée : un cours donné à une date, avec un mode de délivrance.
-/// </summary>
 public sealed class TrainingSession
 {
     public int SessionId { get; private set; }
@@ -12,15 +9,8 @@ public sealed class TrainingSession
 
     public TrainingSession(int sessionId, int courseId, DateTime startDate, SessionDeliveryMode deliveryMode)
     {
-        if (sessionId < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sessionId));
-        }
-
-        if (courseId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(courseId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegative(sessionId);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(courseId);
 
         SessionId = sessionId;
         CourseId = courseId;
@@ -36,10 +26,7 @@ public sealed class TrainingSession
 
     public void ReassignCourse(int courseId)
     {
-        if (courseId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(courseId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(courseId);
 
         CourseId = courseId;
     }
@@ -48,13 +35,10 @@ public sealed class TrainingSession
     {
         if (SessionId != 0)
         {
-            throw new InvalidOperationException("L’identifiant de la session est déjà défini.");
+            throw new InvalidOperationException("L'identifiant de la session est déjà défini.");
         }
 
-        if (sessionId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sessionId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(sessionId);
 
         SessionId = sessionId;
     }

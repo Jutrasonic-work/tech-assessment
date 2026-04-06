@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Moq;
-using WeChooz.TechAssessment.Application.Abstractions.Authentication;
 using WeChooz.TechAssessment.Application.Auth.Commands.Login;
+using WeChooz.TechAssessment.Application.Interfaces.Authentication;
 
 namespace WeChooz.TechAssessment.Tests.Handlers;
 

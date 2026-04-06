@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Shared.Mediator.Application;
+using Shared.Mediator;
 using WeChooz.TechAssessment.Application.Participants.Commands.AddParticipant;
 using WeChooz.TechAssessment.Application.Participants.Commands.RemoveParticipant;
 using WeChooz.TechAssessment.Application.Participants.Commands.UpdateParticipant;
@@ -11,9 +11,11 @@ internal static class ParticipantEndpoints
 {
     internal static void MapParticipantEndpoints(this RouteGroupBuilder root)
     {
-        var g = root.MapGroup("/admin/sessions/{sessionId:int}/participants").RequireAuthorization("Participants");
+        var group = root.MapGroup("/admin/sessions/{sessionId:int}/participants")
+            .RequireAuthorization("Participants")
+            .WithTags("Participants");
 
-        g.MapGet("/", async Task<Ok<List<GetParticipantsBySessionItem>>> (
+        group.MapGet("/", async Task<Ok<List<GetParticipantsBySessionItem>>> (
             IMediator mediator,
             int sessionId,
             CancellationToken cancellationToken) =>
@@ -21,11 +23,10 @@ internal static class ParticipantEndpoints
             var result = await mediator.SendAsync(new GetParticipantsBySessionQuery(sessionId), cancellationToken);
             return TypedResults.Ok(result.Items.ToList());
         })
-        .WithTags("Admin — Participants")
-        .WithSummary("Lister les participants d'une session")
-        .WithDescription("Politique « Participants » : rôles formation ou sales.");
+        .WithSummary("Retourne la liste des participants d'une session")
+        .WithDescription("Liste des participants d'une session donnée. Elle est accessible uniquement aux utilisateurs ayant le rôle 'Participants'.");
 
-        g.MapPost("/", async Task<Created<AddParticipantResponse>> (
+        group.MapPost("/", async Task<Created<AddParticipantResponse>> (
             IMediator mediator,
             int sessionId,
             AddParticipantCommand body,
@@ -34,12 +35,14 @@ internal static class ParticipantEndpoints
             var result = await mediator.SendAsync(body with { SessionId = sessionId }, cancellationToken);
             return TypedResults.Created($"/api/admin/sessions/{sessionId}/participants", result);
         })
-        .WithTags("Admin — Participants")
-        .WithSummary("Ajouter un participant à une session");
+        .WithSummary("Ajoute un participant à une session")
+        .WithDescription("Ajoute un participant à une session donnée. Elle est accessible uniquement aux utilisateurs ayant le rôle 'Participants'.");
 
-        var byId = root.MapGroup("/admin/participants").RequireAuthorization("Participants");
+        var groupById = root.MapGroup("/admin/participants")
+            .RequireAuthorization("Participants")
+            .WithTags("Participants");
 
-        byId.MapPut("/{participantId:int}", async Task<Results<NoContent, NotFound>> (
+        groupById.MapPut("/{participantId:int}", async Task<Results<NoContent, NotFound>> (
             IMediator mediator,
             int participantId,
             UpdateParticipantCommand body,
@@ -48,15 +51,15 @@ internal static class ParticipantEndpoints
             var result = await mediator.SendAsync(body with { ParticipantId = participantId }, cancellationToken);
             return result.Updated ? TypedResults.NoContent() : TypedResults.NotFound();
         })
-        .WithTags("Admin — Participants")
-        .WithSummary("Mettre à jour un participant");
+        .WithSummary("Met à jour les informations d'un participant")
+        .WithDescription("Met à jour les informations d'un participant donné. Elle est accessible uniquement aux utilisateurs ayant le rôle 'Participants'.");
 
-        byId.MapDelete("/{participantId:int}", async Task<NoContent> (IMediator mediator, int participantId, CancellationToken cancellationToken) =>
+        groupById.MapDelete("/{participantId:int}", async Task<NoContent> (IMediator mediator, int participantId, CancellationToken cancellationToken) =>
         {
             await mediator.SendAsync(new RemoveParticipantCommand(participantId), cancellationToken);
             return TypedResults.NoContent();
         })
-        .WithTags("Admin — Participants")
-        .WithSummary("Supprimer un participant");
+        .WithSummary("Supprime un participant")
+        .WithDescription("Supprime un participant donné. Elle est accessible uniquement aux utilisateurs ayant le rôle 'Participants'.");
     }
 }

@@ -2,7 +2,7 @@ using WeChooz.TechAssessment.Domain.Sessions;
 
 namespace WeChooz.TechAssessment.Infrastructure.Data.Repositories.Sessions.ReadModels;
 
-internal sealed record AdminSessionRow(
+internal sealed record AdminSessionRead(
     int SessionId,
     int CourseId,
     string CourseName,

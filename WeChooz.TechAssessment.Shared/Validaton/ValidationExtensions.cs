@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Shared.Validation.Application;
+namespace Shared.Validation;
 
 public static class ValidationExtensions
 {

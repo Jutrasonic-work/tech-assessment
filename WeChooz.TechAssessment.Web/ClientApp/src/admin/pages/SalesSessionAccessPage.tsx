@@ -18,13 +18,19 @@ export function SalesSessionAccessPage() {
             <div>
                 <Title order={2}>Accès session</Title>
                 <Text size="sm" c="dimmed" mt="xs">
-                    Avec le rôle <strong>sales</strong>, saisis l’identifiant numérique de la session pour gérer les participants.
+                    Avec le rôle <strong>sales</strong>, saisis l'identifiant numérique de la session pour gérer les participants.
                 </Text>
             </div>
             <Alert color="blue" variant="light">
-                Tu peux récupérer l’ID depuis l’URL du détail session côté formation, ou depuis la base.
+                Tu peux récupérer l'ID depuis l'URL du détail session côté formation, ou depuis la base.
             </Alert>
-            <NumberInput label="ID de session" placeholder="ex. 12" min={1} value={sessionId} onChange={setSessionId} />
+            <NumberInput
+                label="ID de session"
+                placeholder="ex. 12"
+                min={1}
+                value={sessionId}
+                onChange={(value) => setSessionId(typeof value === "number" ? value : "")}
+            />
             <Group>
                 <Button onClick={go}>Ouvrir les participants</Button>
             </Group>

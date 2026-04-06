@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using WeChooz.TechAssessment.Application.Abstractions.Authentication;
+using WeChooz.TechAssessment.Application.Interfaces.Authentication;
 
 namespace WeChooz.TechAssessment.Web.Authentication;
 

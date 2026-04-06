@@ -1,5 +1,5 @@
-using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Application.Persistence.Sessions;
+using Shared.Mediator;
+using WeChooz.TechAssessment.Application.Interfaces.Sessions;
 using WeChooz.TechAssessment.Domain.Sessions;
 
 namespace WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessions;

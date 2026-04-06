@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Shared.Mediator.Application;
+using Shared.Mediator;
 using WeChooz.TechAssessment.Application.Courses.Commands.CreateCourse;
 using WeChooz.TechAssessment.Application.Courses.Commands.DeleteCourse;
 using WeChooz.TechAssessment.Application.Courses.Commands.UpdateCourse;
@@ -12,18 +12,19 @@ internal static class CourseEndpoints
 {
     internal static void MapCourseEndpoints(this RouteGroupBuilder root)
     {
-        var g = root.MapGroup("/admin/courses").RequireAuthorization("Formation");
+        var group = root.MapGroup("/admin/courses")
+            .RequireAuthorization("Formation")
+            .WithTags("Formations");
 
-        g.MapGet("/", async Task<Ok<List<GetCoursesItem>>> (IMediator mediator, CancellationToken cancellationToken) =>
+        group.MapGet("/", async Task<Ok<List<GetCoursesItem>>> (IMediator mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.SendAsync(new GetCoursesQuery(), cancellationToken);
             return TypedResults.Ok(result.Items.ToList());
         })
-        .WithTags("Admin — Formations")
-        .WithSummary("Lister les formations")
-        .WithDescription("Retourne la liste des formations. Authentification cookie, rôle formation.");
+        .WithSummary("Retourne la liste de toutes les formations.")
+        .WithDescription("Retourne la liste de toutes les formations disponibles.");
 
-        g.MapGet("/{courseId:int}", async Task<Results<Ok<GetCourseByIdResponse>, NotFound>> (
+        group.MapGet("/{courseId:int}", async Task<Results<Ok<GetCourseByIdResponse>, NotFound>> (
             IMediator mediator,
             int courseId,
             CancellationToken cancellationToken) =>
@@ -31,19 +32,18 @@ internal static class CourseEndpoints
             var course = await mediator.SendAsync(new GetCourseByIdQuery(courseId), cancellationToken);
             return course is null ? TypedResults.NotFound() : TypedResults.Ok(course);
         })
-        .WithTags("Admin — Formations")
-        .WithSummary("Détail d'une formation")
-        .WithDescription("Retourne 404 si l'identifiant est inconnu.");
+        .WithSummary("Retourne les détails d'une formation.")
+        .WithDescription("Retourne les détails d'une formation spécifique identifiée par son ID.");
 
-        g.MapPost("/", async Task<Created<CreateCourseResponse>> (IMediator mediator, CreateCourseCommand body, CancellationToken cancellationToken) =>
+        group.MapPost("/", async Task<Created<CreateCourseResponse>> (IMediator mediator, CreateCourseCommand body, CancellationToken cancellationToken) =>
         {
             var result = await mediator.SendAsync(body, cancellationToken);
             return TypedResults.Created($"/api/admin/courses/{result.CourseId}", result);
         })
-        .WithTags("Admin — Formations")
-        .WithSummary("Créer une formation");
+        .WithSummary("Crée une nouvelle formation.")
+        .WithDescription("Permet de créer une nouvelle formation en fournissant les détails nécessaires dans le corps de la requête.");
 
-        g.MapPut("/{courseId:int}", async Task<Results<NoContent, NotFound>> (
+        group.MapPut("/{courseId:int}", async Task<Results<NoContent, NotFound>> (
             IMediator mediator,
             int courseId,
             UpdateCourseCommand body,
@@ -52,16 +52,15 @@ internal static class CourseEndpoints
             var result = await mediator.SendAsync(body with { CourseId = courseId }, cancellationToken);
             return result.Updated ? TypedResults.NoContent() : TypedResults.NotFound();
         })
-        .WithTags("Admin — Formations")
-        .WithSummary("Mettre à jour une formation")
-        .WithDescription("Le corps ne contient pas l'id : il est pris depuis l'URL.");
+        .WithSummary("Met à jour une formation existante.")
+        .WithDescription("Permet de mettre à jour les détails d'une formation existante identifiée par son ID en fournissant les nouvelles informations dans le corps de la requête.");
 
-        g.MapDelete("/{courseId:int}", async Task<NoContent> (IMediator mediator, int courseId, CancellationToken cancellationToken) =>
+        group.MapDelete("/{courseId:int}", async Task<NoContent> (IMediator mediator, int courseId, CancellationToken cancellationToken) =>
         {
             await mediator.SendAsync(new DeleteCourseCommand(courseId), cancellationToken);
             return TypedResults.NoContent();
         })
-        .WithTags("Admin — Formations")
-        .WithSummary("Supprimer une formation");
+        .WithSummary("Supprime une formation.")
+        .WithDescription("Permet de supprimer une formation existante identifiée par son ID.");
     }
 }

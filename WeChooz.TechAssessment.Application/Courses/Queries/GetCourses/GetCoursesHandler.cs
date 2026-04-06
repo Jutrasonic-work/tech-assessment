@@ -1,5 +1,5 @@
-using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Application.Persistence.Courses;
+using Shared.Mediator;
+using WeChooz.TechAssessment.Application.Interfaces.Courses;
 
 namespace WeChooz.TechAssessment.Application.Courses.Queries.GetCourses;
 

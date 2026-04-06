@@ -2,7 +2,7 @@ using WeChooz.TechAssessment.Domain.Courses;
 
 namespace WeChooz.TechAssessment.Infrastructure.Data.Repositories.Courses.ReadModels;
 
-internal sealed record CourseDetailRow(
+internal sealed record CourseDetailRead(
     int CourseId,
     string Name,
     string ShortDescription,

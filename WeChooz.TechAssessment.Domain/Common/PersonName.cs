@@ -1,6 +1,5 @@
 namespace WeChooz.TechAssessment.Domain.Common;
 
-/// <summary>Prénom et nom d’une personne (formateur ou participant).</summary>
 public sealed record PersonName
 {
     public string FirstName { get; }

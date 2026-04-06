@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Scalar.AspNetCore;
-using Shared.Mediator.Application;
+using Shared.Validation;
 using Vite.AspNetCore;
 using WeChooz.TechAssessment.Application;
-using WeChooz.TechAssessment.Application.Abstractions.Authentication;
+using WeChooz.TechAssessment.Application.Interfaces.Authentication;
 using WeChooz.TechAssessment.Infrastructure;
-using Shared.Validation.Api;
 using WeChooz.TechAssessment.Web.Api;
 using WeChooz.TechAssessment.Web.Authentication;
 
@@ -20,7 +19,6 @@ var redisConnectionString = builder.Configuration.GetConnectionString("cache") ?
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(sqlServerConnectionString);
-builder.Services.AddMediator();
 
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<RazorViewEngineOptions>(options =>

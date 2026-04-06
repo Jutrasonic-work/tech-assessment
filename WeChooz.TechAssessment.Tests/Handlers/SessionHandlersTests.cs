@@ -1,5 +1,5 @@
 using Moq;
-using WeChooz.TechAssessment.Application.Persistence.Sessions;
+using WeChooz.TechAssessment.Application.Interfaces.Sessions;
 using WeChooz.TechAssessment.Application.Sessions.Commands.CreateSession;
 using WeChooz.TechAssessment.Application.Sessions.Commands.DeleteSession;
 using WeChooz.TechAssessment.Application.Sessions.Commands.UpdateSession;

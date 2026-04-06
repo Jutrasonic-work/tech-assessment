@@ -1,6 +1,6 @@
 using Markdig;
-using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Application.Persistence.Sessions;
+using Shared.Mediator;
+using WeChooz.TechAssessment.Application.Interfaces.Sessions;
 
 namespace WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessionDetail;
 

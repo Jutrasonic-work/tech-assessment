@@ -1,6 +1,6 @@
 using WeChooz.TechAssessment.Domain.Participants;
 
-namespace WeChooz.TechAssessment.Application.Persistence.Participants;
+namespace WeChooz.TechAssessment.Application.Interfaces.Participants;
 
 public interface IParticipantRepository
 {

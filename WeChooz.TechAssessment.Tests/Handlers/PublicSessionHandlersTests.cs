@@ -1,5 +1,5 @@
 using Moq;
-using WeChooz.TechAssessment.Application.Persistence.Sessions;
+using WeChooz.TechAssessment.Application.Interfaces.Sessions;
 using WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessionDetail;
 using WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessions;
 using WeChooz.TechAssessment.Domain.Courses;

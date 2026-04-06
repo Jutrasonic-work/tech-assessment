@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using Shared.Mediator.Application;
-using WeChooz.TechAssessment.Application.Abstractions.Authentication;
+using Shared.Mediator;
+using WeChooz.TechAssessment.Application.Interfaces.Authentication;
 
 namespace WeChooz.TechAssessment.Application.Auth.Commands.Login;
 

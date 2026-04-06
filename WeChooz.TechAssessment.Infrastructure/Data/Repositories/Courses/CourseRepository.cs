@@ -1,8 +1,7 @@
 using Dapper;
-using WeChooz.TechAssessment.Application.Persistence.Courses;
+using WeChooz.TechAssessment.Application.Interfaces.Courses;
 using WeChooz.TechAssessment.Domain.Common;
 using WeChooz.TechAssessment.Domain.Courses;
-using WeChooz.TechAssessment.Infrastructure.Data;
 using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Courses.ReadModels;
 
 namespace WeChooz.TechAssessment.Infrastructure.Data.Repositories.Courses;
@@ -11,27 +10,27 @@ public sealed class CourseRepository(IDbConnectionFactory connectionFactory) : I
 {
     public async Task<IReadOnlyList<CourseSummary>> ListAsync(CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             SELECT CourseId, Name, CseAudience, DurationDays, MaxCapacity
             FROM dbo.Courses
             ORDER BY Name;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
-        var rows = await conn.QueryAsync<CourseListRow>(
+        var rows = await conn.QueryAsync<CourseListRead>(
             new CommandDefinition(commandText: sql, parameters: null, cancellationToken: cancellationToken));
-        return rows.Select(ToDomain).ToList();
+        return [.. rows.Select(ToDomain)];
     }
 
     public async Task<Course?> GetByIdAsync(int courseId, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             SELECT CourseId, Name, ShortDescription, LongDescription AS LongDescriptionMarkdown, DurationDays, CseAudience, MaxCapacity,
                    TrainerFirstName, TrainerLastName
             FROM dbo.Courses
             WHERE CourseId = @CourseId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
-        var row = await conn.QuerySingleOrDefaultAsync<CourseDetailRow>(
+        var row = await conn.QuerySingleOrDefaultAsync<CourseDetailRead>(
             new CommandDefinition(commandText: sql, parameters: new { CourseId = courseId }, cancellationToken: cancellationToken));
         return row is null ? null : ToDomain(row);
     }
@@ -47,11 +46,11 @@ public sealed class CourseRepository(IDbConnectionFactory connectionFactory) : I
         string trainerLastName,
         CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             INSERT INTO dbo.Courses (Name, ShortDescription, LongDescription, DurationDays, CseAudience, MaxCapacity, TrainerFirstName, TrainerLastName)
             OUTPUT INSERTED.CourseId
             VALUES (@Name, @ShortDescription, @LongDescription, @DurationDays, @CseAudience, @MaxCapacity, @TrainerFirstName, @TrainerLastName);
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
         return await conn.QuerySingleAsync<int>(
             new CommandDefinition(
@@ -82,7 +81,7 @@ public sealed class CourseRepository(IDbConnectionFactory connectionFactory) : I
         string trainerLastName,
         CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             UPDATE dbo.Courses
             SET Name = @Name,
                 ShortDescription = @ShortDescription,
@@ -93,7 +92,7 @@ public sealed class CourseRepository(IDbConnectionFactory connectionFactory) : I
                 TrainerFirstName = @TrainerFirstName,
                 TrainerLastName = @TrainerLastName
             WHERE CourseId = @CourseId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
         var affected = await conn.ExecuteAsync(
             new CommandDefinition(
@@ -116,19 +115,19 @@ public sealed class CourseRepository(IDbConnectionFactory connectionFactory) : I
 
     public async Task DeleteAsync(int courseId, CancellationToken cancellationToken = default)
     {
-        const string sql = """
+        const string sql = @"
             DELETE FROM dbo.Courses
             WHERE CourseId = @CourseId;
-            """;
+            ";
         await using var conn = await connectionFactory.OpenConnectionAsync(cancellationToken);
         await conn.ExecuteAsync(
             new CommandDefinition(commandText: sql, parameters: new { CourseId = courseId }, cancellationToken: cancellationToken));
     }
 
-    private static CourseSummary ToDomain(CourseListRow r) =>
+    private static CourseSummary ToDomain(CourseListRead r) =>
         new(r.CourseId, r.Name, r.CseAudience, r.DurationDays, r.MaxCapacity);
 
-    private static Course ToDomain(CourseDetailRow r) =>
+    private static Course ToDomain(CourseDetailRead r) =>
         new(
             r.CourseId,
             r.Name,

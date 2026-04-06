@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Shared.Mediator.Application;
+namespace Shared.Mediator;
 
 public class Mediator(IServiceProvider provider) : IMediator
 {

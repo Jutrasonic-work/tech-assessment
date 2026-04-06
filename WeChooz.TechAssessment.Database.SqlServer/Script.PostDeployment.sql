@@ -1,5 +1,5 @@
 /*
-  Données de démo (idempotent : ne s’exécute que si les tables sont vides).
+  Données de démo (idempotent : ne s'exécute que si les tables sont vides).
   CseAudience : 0 = élu au CSE, 1 = président de CSE (aligné sur le domaine C#).
   DeliveryMode : 0 = présentiel, 1 = à distance.
 */
@@ -16,7 +16,7 @@ BEGIN
      N'## Objectifs
 
 - Poser les bases du **dialogue social** au Comité social et économique.
-- Clarifier les obligations d’information et de consultation.
+- Clarifier les obligations d'information et de consultation.
 
 ## Public
 
@@ -24,7 +24,7 @@ BEGIN
 
 ## Méthode
 
-Alternance d’apports, études de cas et quiz.',
+Alternance d'apports, études de cas et quiz.',
      2,
      0,
      20,
@@ -41,7 +41,7 @@ Renforcer la **fonction de présidence** : préparation, animation et suivi.
 ## Programme
 
 1. Cadre légal de la présidence
-2. Relations avec l’employeur et les expert·e·s
+2. Relations avec l'employeur et les expert·e·s
 3. Outils pratiques (ordre du jour, compte rendu)
 
 > Session adaptée aux présidents désignés ou en cours de mandat.',
@@ -52,8 +52,8 @@ Renforcer la **fonction de présidence** : préparation, animation et suivi.
      N'Alami'),
 
     (3,
-     N'Négociation d’accords d’entreprise',
-     N'Méthodes et mise en œuvre d’accords en entreprise.',
+     N'Négociation d'accords d'entreprise',
+     N'Méthodes et mise en œuvre d'accords en entreprise.',
      N'## Objectifs
 
 - Structurer une **négociation** (cadrage, phases, clarification des positions).
@@ -61,7 +61,7 @@ Renforcer la **fonction de présidence** : préparation, animation et suivi.
 
 ## Prérequis
 
-Expérience d’élu ou de représentant du personnel.',
+Expérience d'élu ou de représentant du personnel.',
      3,
      0,
      16,

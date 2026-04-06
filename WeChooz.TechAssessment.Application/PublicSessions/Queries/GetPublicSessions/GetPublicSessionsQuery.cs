@@ -1,4 +1,4 @@
-using Shared.Mediator.Application;
+using Shared.Mediator;
 using WeChooz.TechAssessment.Domain.Courses;
 using WeChooz.TechAssessment.Domain.Sessions;
 

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Shared.Mediator.Application;
+using Shared.Mediator;
 using WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessionDetail;
 using WeChooz.TechAssessment.Application.PublicSessions.Queries.GetPublicSessions;
 using WeChooz.TechAssessment.Application.Sessions.Commands.CreateSession;
@@ -22,9 +22,11 @@ internal static class SessionEndpoints
 
     private static void MapPublic(RouteGroupBuilder root)
     {
-        var g = root.MapGroup("/public").AllowAnonymous();
+        var group = root.MapGroup("/public")
+            .AllowAnonymous()
+            .WithTags("Sessions - Public");
 
-        g.MapGet("/sessions", async Task<Ok<List<GetPublicSessionsItem>>> (
+        group.MapGet("/sessions", async Task<Ok<List<GetPublicSessionsItem>>> (
             IMediator mediator,
             CseAudience? audience,
             SessionDeliveryMode? deliveryMode,
@@ -38,11 +40,10 @@ internal static class SessionEndpoints
             var result = await mediator.SendAsync(query, cancellationToken);
             return TypedResults.Ok(result.Items.ToList());
         })
-        .WithTags("Public — Sessions")
-        .WithSummary("Lister les sessions (catalogue public)")
-        .WithDescription("Filtres query optionnels : audience, deliveryMode, plages de dates (startAfter/startBefore ou startFrom/startTo).");
+        .WithSummary("Retourne la liste des sessions publiques disponibles")
+        .WithDescription("Retourne la liste des sessions publiques disponibles, avec la possibilité de filtrer par audience, mode de livraison et dates de début");
 
-        g.MapGet("/sessions/{sessionId:int}", async Task<Results<Ok<GetPublicSessionDetailResponse>, NotFound>> (
+        group.MapGet("/sessions/{sessionId:int}", async Task<Results<Ok<GetPublicSessionDetailResponse>, NotFound>> (
             IMediator mediator,
             int sessionId,
             CancellationToken cancellationToken) =>
@@ -50,44 +51,42 @@ internal static class SessionEndpoints
             var detail = await mediator.SendAsync(new GetPublicSessionDetailQuery(sessionId), cancellationToken);
             return detail is null ? TypedResults.NotFound() : TypedResults.Ok(detail);
         })
-        .WithTags("Public — Sessions")
-        .WithSummary("Détail d'une session (public)")
-        .WithDescription("La description longue est renvoyée en HTML (Markdown rendu côté serveur).");
+        .WithSummary("Retourne les détails d'une session publique")
+        .WithDescription("Retourne les détails d'une session publique spécifique, identifiée par son ID");
     }
 
     private static void MapAdmin(RouteGroupBuilder root)
     {
-        var g = root.MapGroup("/admin/sessions").RequireAuthorization("Formation");
+        var group = root.MapGroup("/admin/sessions")
+            .RequireAuthorization("Formation")
+            .WithTags("Sessions - Admin");
 
-        g.MapGet("/", async Task<Ok<List<GetAdminSessionsItem>>> (IMediator mediator, CancellationToken cancellationToken) =>
+        group.MapGet("/", async Task<Ok<List<GetAdminSessionsItem>>> (IMediator mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.SendAsync(new GetAdminSessionsQuery(), cancellationToken);
             return TypedResults.Ok(result.Items.ToList());
         })
-        .WithTags("Admin — Sessions")
-        .WithSummary("Lister les sessions (admin)")
-        .WithDescription("Authentification cookie, rôle formation.");
+        .WithSummary("Retourne la liste de toutes les sessions")
+        .WithSummary("Retourne la liste de toutes les sessions, sans filtrage, pour les administrateurs");
 
-        g.MapGet("/{sessionId:int}", async Task<Results<Ok<GetAdminSessionByIdResponse>, NotFound>> (
+        group.MapGet("/{sessionId:int}", async Task<Results<Ok<GetAdminSessionByIdResponse>, NotFound>> (
             IMediator mediator,
             int sessionId,
             CancellationToken cancellationToken) =>
         {
             var session = await mediator.SendAsync(new GetAdminSessionByIdQuery(sessionId), cancellationToken);
             return session is null ? TypedResults.NotFound() : TypedResults.Ok(session);
-        })
-        .WithTags("Admin — Sessions")
-        .WithSummary("Détail d'une session (admin)");
+        });
 
-        g.MapPost("/", async Task<Created<CreateSessionResponse>> (IMediator mediator, CreateSessionCommand body, CancellationToken cancellationToken) =>
+        group.MapPost("/", async Task<Created<CreateSessionResponse>> (IMediator mediator, CreateSessionCommand body, CancellationToken cancellationToken) =>
         {
             var result = await mediator.SendAsync(body, cancellationToken);
             return TypedResults.Created($"/api/admin/sessions/{result.SessionId}", result);
         })
-        .WithTags("Admin — Sessions")
-        .WithSummary("Créer une session");
+        .WithSummary("Crée une nouvelle session")
+        .WithDescription("Permet aux administrateurs de créer une nouvelle session en fournissant les détails nécessaires dans le corps de la requête");
 
-        g.MapPut("/{sessionId:int}", async Task<Results<NoContent, NotFound>> (
+        group.MapPut("/{sessionId:int}", async Task<Results<NoContent, NotFound>> (
             IMediator mediator,
             int sessionId,
             UpdateSessionCommand body,
@@ -96,15 +95,15 @@ internal static class SessionEndpoints
             var result = await mediator.SendAsync(body with { SessionId = sessionId }, cancellationToken);
             return result.Updated ? TypedResults.NoContent() : TypedResults.NotFound();
         })
-        .WithTags("Admin — Sessions")
-        .WithSummary("Mettre à jour une session");
+        .WithSummary("Met à jour une session existante")
+        .WithDescription("Permet aux administrateurs de mettre à jour une session existante en fournissant les détails à mettre à jour dans le corps de la requête, et en spécifiant l'ID de la session dans l'URL");
 
-        g.MapDelete("/{sessionId:int}", async Task<NoContent> (IMediator mediator, int sessionId, CancellationToken cancellationToken) =>
+        group.MapDelete("/{sessionId:int}", async Task<NoContent> (IMediator mediator, int sessionId, CancellationToken cancellationToken) =>
         {
             await mediator.SendAsync(new DeleteSessionCommand(sessionId), cancellationToken);
             return TypedResults.NoContent();
         })
-        .WithTags("Admin — Sessions")
-        .WithSummary("Supprimer une session");
+        .WithSummary("Supprime une session")
+        .WithSummary("Permet aux administrateurs de supprimer une session en spécifiant son ID dans l'URL");
     }
 }

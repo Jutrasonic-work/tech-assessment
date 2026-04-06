@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Shared.Validation.Api;
+namespace Shared.Validation;
 
 public static class FluentValidationExceptionExtensions
 {

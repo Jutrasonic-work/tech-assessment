@@ -1,4 +1,4 @@
-﻿namespace Shared.Mediator.Application;
+﻿namespace Shared.Mediator;
 
 /// <summary>
 /// Mediator interface for sending requests to their respective handlers.

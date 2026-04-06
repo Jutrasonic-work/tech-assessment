@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace WeChooz.TechAssessment.Application.Abstractions.Authentication;
+namespace WeChooz.TechAssessment.Application.Interfaces.Authentication;
 
 public interface IAuthenticationSignIn
 {

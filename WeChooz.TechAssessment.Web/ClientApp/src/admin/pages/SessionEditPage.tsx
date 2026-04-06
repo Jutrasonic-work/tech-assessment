@@ -58,7 +58,6 @@ export function SessionEditPage() {
         return () => {
             cancelled = true;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isNew]);
 
     useEffect(() => {
@@ -80,7 +79,6 @@ export function SessionEditPage() {
                 setError(e instanceof ApiError ? e.message : "Erreur chargement");
             })
             .finally(() => setLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionId, isNew]);
 
     const submit = form.onSubmit(async (values) => {

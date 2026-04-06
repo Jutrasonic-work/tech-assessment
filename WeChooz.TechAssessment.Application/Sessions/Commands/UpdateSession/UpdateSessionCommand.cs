@@ -1,4 +1,4 @@
-using Shared.Mediator.Application;
+using Shared.Mediator;
 using WeChooz.TechAssessment.Domain.Sessions;
 
 namespace WeChooz.TechAssessment.Application.Sessions.Commands.UpdateSession;

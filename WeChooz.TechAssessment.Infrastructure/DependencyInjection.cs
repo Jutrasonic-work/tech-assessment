@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using WeChooz.TechAssessment.Application.Persistence.Courses;
-using WeChooz.TechAssessment.Application.Persistence.Participants;
-using WeChooz.TechAssessment.Application.Persistence.Sessions;
+using WeChooz.TechAssessment.Application.Interfaces.Courses;
+using WeChooz.TechAssessment.Application.Interfaces.Participants;
+using WeChooz.TechAssessment.Application.Interfaces.Sessions;
 using WeChooz.TechAssessment.Infrastructure.Data;
 using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Courses;
 using WeChooz.TechAssessment.Infrastructure.Data.Repositories.Participants;

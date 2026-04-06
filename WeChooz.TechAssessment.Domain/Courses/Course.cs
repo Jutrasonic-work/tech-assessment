@@ -2,9 +2,6 @@ using WeChooz.TechAssessment.Domain.Common;
 
 namespace WeChooz.TechAssessment.Domain.Courses;
 
-/// <summary>
-/// Cours de formation (définition catalogue : contenu, durée, public cible, capacité, formateur).
-/// </summary>
 public sealed class Course
 {
     public int CourseId { get; private set; }
@@ -26,20 +23,9 @@ public sealed class Course
         int maxCapacity,
         PersonName trainer)
     {
-        if (courseId < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(courseId));
-        }
-
-        if (durationDays <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(durationDays), "La durée doit être strictement positive.");
-        }
-
-        if (maxCapacity <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(maxCapacity), "La capacité doit être strictement positive.");
-        }
+        ArgumentOutOfRangeException.ThrowIfEqual(courseId, 0);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(durationDays);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxCapacity);
 
         CourseId = courseId;
         Name = RequireNonWhiteSpace(name, nameof(name));
@@ -60,15 +46,8 @@ public sealed class Course
         int maxCapacity,
         PersonName trainer)
     {
-        if (durationDays <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(durationDays));
-        }
-
-        if (maxCapacity <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(maxCapacity));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(durationDays);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxCapacity);
 
         Name = RequireNonWhiteSpace(name, nameof(name));
         ShortDescription = RequireNonWhiteSpace(shortDescription, nameof(shortDescription));
@@ -83,13 +62,10 @@ public sealed class Course
     {
         if (CourseId != 0)
         {
-            throw new InvalidOperationException("L’identifiant du cours est déjà défini.");
+            throw new InvalidOperationException("L'identifiant du cours est déjà défini.");
         }
 
-        if (courseId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(courseId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(courseId);
 
         CourseId = courseId;
     }

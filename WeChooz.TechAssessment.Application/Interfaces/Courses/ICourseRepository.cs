@@ -1,6 +1,6 @@
 using WeChooz.TechAssessment.Domain.Courses;
 
-namespace WeChooz.TechAssessment.Application.Persistence.Courses;
+namespace WeChooz.TechAssessment.Application.Interfaces.Courses;
 
 public interface ICourseRepository
 {

@@ -11,6 +11,9 @@ internal static class DapperTypeHandlers
     private static readonly object Gate = new();
     private static bool _registered;
 
+    /// <summary>
+    /// Enregistre les type handlers Dapper pour les enums domaine. Doit être appelé une seule fois au démarrage de l'application.
+    /// </summary>
     public static void Register()
     {
         lock (Gate)

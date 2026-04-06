@@ -4,7 +4,7 @@ using WeChooz.TechAssessment.Application.Courses.Commands.DeleteCourse;
 using WeChooz.TechAssessment.Application.Courses.Commands.UpdateCourse;
 using WeChooz.TechAssessment.Application.Courses.Queries.GetCourseById;
 using WeChooz.TechAssessment.Application.Courses.Queries.GetCourses;
-using WeChooz.TechAssessment.Application.Persistence.Courses;
+using WeChooz.TechAssessment.Application.Interfaces.Courses;
 using WeChooz.TechAssessment.Domain.Common;
 using WeChooz.TechAssessment.Domain.Courses;
 

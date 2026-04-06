@@ -1,4 +1,4 @@
-using Shared.Mediator.Application;
+using Shared.Mediator;
 using WeChooz.TechAssessment.Domain.Courses;
 
 namespace WeChooz.TechAssessment.Application.Courses.Commands.UpdateCourse;

@@ -2,9 +2,6 @@ using WeChooz.TechAssessment.Domain.Common;
 
 namespace WeChooz.TechAssessment.Domain.Participants;
 
-/// <summary>
-/// Personne inscrite à une session (coordonnées + entreprise).
-/// </summary>
 public sealed class Participant
 {
     public int ParticipantId { get; private set; }
@@ -15,15 +12,8 @@ public sealed class Participant
 
     public Participant(int participantId, int sessionId, PersonName name, EmailAddress email, string companyName)
     {
-        if (participantId < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(participantId));
-        }
-
-        if (sessionId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sessionId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegative(participantId);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(sessionId);
 
         ParticipantId = participantId;
         SessionId = sessionId;
@@ -43,13 +33,10 @@ public sealed class Participant
     {
         if (ParticipantId != 0)
         {
-            throw new InvalidOperationException("L’identifiant du participant est déjà défini.");
+            throw new InvalidOperationException("L'identifiant du participant est déjà défini.");
         }
 
-        if (participantId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(participantId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(participantId);
 
         ParticipantId = participantId;
     }

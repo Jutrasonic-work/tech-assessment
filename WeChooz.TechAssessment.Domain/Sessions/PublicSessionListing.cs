@@ -2,7 +2,6 @@ using WeChooz.TechAssessment.Domain.Courses;
 
 namespace WeChooz.TechAssessment.Domain.Sessions;
 
-/// <summary>Session proposée au catalogue public (cours + disponibilité).</summary>
 public sealed record PublicSessionListing(
     int SessionId,
     string CourseName,

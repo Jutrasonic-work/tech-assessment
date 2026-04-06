@@ -1,4 +1,4 @@
-﻿namespace Shared.Mediator.Application;
+﻿namespace Shared.Mediator;
 
 /// <summary>
 /// Handles a request and returns a result.

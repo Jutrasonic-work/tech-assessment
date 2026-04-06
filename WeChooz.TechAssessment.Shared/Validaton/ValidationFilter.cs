@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Reflection;
 
-namespace Shared.Validation.Api;
+namespace Shared.Validation;
 
 /// <summary>
 /// Indicates that a parameter should be validated using FluentValidation.

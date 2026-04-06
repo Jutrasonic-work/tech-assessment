@@ -3,7 +3,7 @@ using WeChooz.TechAssessment.Application.Participants.Commands.AddParticipant;
 using WeChooz.TechAssessment.Application.Participants.Commands.RemoveParticipant;
 using WeChooz.TechAssessment.Application.Participants.Commands.UpdateParticipant;
 using WeChooz.TechAssessment.Application.Participants.Queries.GetParticipantsBySession;
-using WeChooz.TechAssessment.Application.Persistence.Participants;
+using WeChooz.TechAssessment.Application.Interfaces.Participants;
 using WeChooz.TechAssessment.Domain.Common;
 using WeChooz.TechAssessment.Domain.Participants;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Shared.Mediator.Application;
+namespace Shared.Mediator;
 
 public static class MediatorExtensions
 {
@@ -25,7 +25,6 @@ public static class MediatorExtensions
         var assemblyName = entryAssembly!.GetName().Name!
             .Replace(".Api", ".Application", StringComparison.Ordinal)
             .Replace(".Web", ".Application", StringComparison.Ordinal)
-            .Replace(".AppHost", ".Application", StringComparison.Ordinal)
             .Replace(".Console", ".Application", StringComparison.Ordinal);
         var assembly = Assembly.Load(assemblyName);
 
