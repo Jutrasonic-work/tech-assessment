@@ -96,7 +96,6 @@ export function SessionParticipantsPage() {
                 companyName: editRow.companyName,
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editRow]);
 
     const submitAdd = addForm.onSubmit(async (v) => {

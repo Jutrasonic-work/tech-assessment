@@ -12,12 +12,15 @@ public sealed class LoginHandlerTests
     [InlineData("sales")]
     public async Task HandleAsync_connexion_valide_appelle_SignIn_et_retourne_les_claims(string login)
     {
+        // Arrange
         var signIn = new Mock<IAuthenticationSignIn>();
         var handler = new LoginHandler(signIn.Object);
         var cmd = new LoginCommand(login);
 
+        // Act
         var result = await handler.HandleAsync(cmd, CancellationToken.None);
 
+        // Assert
         Assert.Null(result.Failure);
         Assert.NotNull(result.Response);
         Assert.Equal(login, result.Response.Login);
@@ -31,11 +34,14 @@ public sealed class LoginHandlerTests
     [Fact]
     public async Task HandleAsync_login_invalide_ne_appelle_pas_SignIn()
     {
+        // Arrange
         var signIn = new Mock<IAuthenticationSignIn>();
         var handler = new LoginHandler(signIn.Object);
 
+        // Act
         var result = await handler.HandleAsync(new LoginCommand("intrus"), CancellationToken.None);
 
+        // Assert
         Assert.Null(result.Response);
         Assert.Equal(LoginFailureKind.InvalidCredentials, result.Failure);
         signIn.Verify(s => s.SignInAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()), Times.Never);

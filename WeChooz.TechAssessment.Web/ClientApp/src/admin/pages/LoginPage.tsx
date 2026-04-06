@@ -31,7 +31,7 @@ export function LoginPage() {
         } catch (e) {
             if (e instanceof ApiError) {
                 if (e.status === 401) {
-                    setError("Identifiant inconnu. Utilise « formation » ou « sales ».");
+                    setError("Identifiant inconnu. Utilisez « formation » ou « sales ».");
                 } else {
                     setError(e.message);
                 }

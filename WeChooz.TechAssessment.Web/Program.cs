@@ -17,7 +17,7 @@ builder.AddServiceDefaults();
 var sqlServerConnectionString = builder.Configuration.GetConnectionString("formation") ?? throw new InvalidOperationException("Connection string 'formation' not found.");
 var redisConnectionString = builder.Configuration.GetConnectionString("cache") ?? throw new InvalidOperationException("Connection string 'cache' not found.");
 
-builder.Services.AddApplication();
+builder.Services.AddApplication(redisConnectionString);
 builder.Services.AddInfrastructure(sqlServerConnectionString);
 
 builder.Services.AddControllersWithViews();

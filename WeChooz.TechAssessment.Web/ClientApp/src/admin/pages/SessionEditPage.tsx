@@ -32,7 +32,7 @@ export function SessionEditPage() {
             deliveryMode: String(Del.InPerson),
         },
         validate: {
-            courseId: (v) => (!v ? "Choisis une formation" : null),
+            courseId: (v) => (!v ? "Choisissez une formation" : null),
             startDateLocal: (v) => (!v ? "Date requise" : null),
         },
     });
