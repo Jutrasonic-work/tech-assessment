@@ -32,6 +32,10 @@
 - Appels API en TypeScript
 - UI basée sur Mantine
 
+## Base de données
+
+Il faut publier manuellement le projet `WeChooz.TechAssessment.Database.SqlServer` pour mettre à jour le schéma de la base de données.
+
 ## Tests
 
 - Tests unitaires sur les handlers (logique applicative)
